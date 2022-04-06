@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Button = () => {
+
   return (
     <div>
       <button onClick={() => alert("OK")}>Button</button>
