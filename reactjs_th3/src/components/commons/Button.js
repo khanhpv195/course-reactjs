@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 
-const Button = () => {
-
+const Button = (props) => {
   return (
     <div>
-      <button onClick={() => alert("OK")}>Button</button>
+      <button onClick={props.onClickHandle}>{props.btnText}</button>
     </div>
   );
 };
