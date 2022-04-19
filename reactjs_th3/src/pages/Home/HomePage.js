@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Button from "./../../components/commons/Button";
 import Input from "./../../components/commons/Input";
+import Text from "./../../components/commons/Text";
+import useCalculate from "./../../untils/useCalculate";
 import "./../../assets/css/style.css";
 const HomePage = () => {
   const [name, setName] = useState("");
@@ -21,15 +23,27 @@ const HomePage = () => {
     }
   };
 
+  const memoFunction = (value) => {
+    console.log(value);
+    return value;
+  };
+  const memo = useMemo(() => memoFunction(name), [name, age]);
+
+  const totalCalculate = useCalculate(age);
   return (
     <div className="wrapper">
       {loading ? (
-        <h1>loading...</h1>
+        <h1>
+          {" "}
+          <Text text="Loading... " />
+        </h1>
       ) : (
         <div>
           <div>
-            <h1>Hello:{name}</h1>
-            <h1>Age:{age}</h1>
+            <h1>{memo}</h1>
+            <Text text={"Hello: " + name} />
+            <Text text={"Age: " + age} />
+            <Text text={"Age x2: " + totalCalculate} />
           </div>
           <Input
             labelText="Tên"
@@ -42,6 +56,7 @@ const HomePage = () => {
             handleOnChange={(e) => setAge(e.target.value)}
           />
           <Button onClickHandle={() => removeData()} btnText="Clear Data" />
+          <button onClick={() => alert("test")}>Test</button>
         </div>
       )}
     </div>
