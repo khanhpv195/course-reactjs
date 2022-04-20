@@ -1,35 +1,35 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Button from "./../../components/commons/Button";
 import Input from "./../../components/commons/Input";
 import Text from "./../../components/commons/Text";
 import useCalculate from "./../../untils/useCalculate";
 import "./../../assets/css/style.css";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup.object({
+  fullName: yup.string().required().min(3, 'Must be exactly 3 digits'),
+  age: yup.number().required().min(3, 'Must be exactly 3 digits'),
+}).required();
+
 const HomePage = () => {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
   const [loading, setLoading] = useState(false);
-  const removeData = () => {
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  const onSubmit = data => {
+    console.log("🚀 ~ file: HomePage.js ~ line 14 ~ HomePage ~ data", data)
     setLoading(true);
-    if (name.length && age.length) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 5000);
-      setName("");
-      setAge("");
-    } else {
+    setTimeout(() => {
       setLoading(false);
-      alert("Vui lòng nhập giá trị");
-      return false;
-    }
+    }, 2000);
+    setValue("fullName", '');
+    setValue("age", null);
   };
 
-  const memoFunction = (value) => {
-    console.log(value);
-    return value;
-  };
-  const memo = useMemo(() => memoFunction(name), [name, age]);
 
-  const totalCalculate = useCalculate(age);
   return (
     <div className="wrapper">
       {loading ? (
@@ -39,24 +39,24 @@ const HomePage = () => {
         </h1>
       ) : (
         <div>
-          <div>
-            <h1>{memo}</h1>
-            <Text text={"Hello: " + name} />
-            <Text text={"Age: " + age} />
-            <Text text={"Age x2: " + totalCalculate} />
-          </div>
-          <Input
-            labelText="Tên"
-            placeholderText="Vui lòng nhập tên"
-            handleOnChange={(e) => setName(e.target.value)}
-          />
-          <Input
-            labelText="Tuổi"
-            placeholderText="Vui lòng nhập tuổi"
-            handleOnChange={(e) => setAge(e.target.value)}
-          />
-          <Button onClickHandle={() => removeData()} btnText="Clear Data" />
-          <button onClick={() => alert("test")}>Test</button>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+              style={{ marginBottom: '2rem' }}
+              {...register("fullName")}
+              placeholder="Full Name"
+            />
+            <p>{errors.fullName?.message}</p>
+            <br />
+            <input
+              placeholder="Age"
+              type="number"
+              {...register("age")}
+              style={{ marginBottom: '2rem' }}
+            />
+            <p>{errors.age?.message}</p>
+            <br />
+            <button type="submit">Submit</button>
+          </form>
         </div>
       )}
     </div>

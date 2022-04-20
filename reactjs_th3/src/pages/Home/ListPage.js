@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Table } from "react-bootstrap";
-import axios from "axios";
+import serviceCallApi from "./../../untils/serviceApi";
 const ListPage = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -10,9 +10,7 @@ const ListPage = () => {
 
   const callApi = async () => {
     try {
-      const result = await axios.get(
-        "https://624061412aeb48a9af735b00.mockapi.io/api/v1/users?page=1&limit=10"
-      );
+      const result = await serviceCallApi("https://624061412aeb48a9af735b00.mockapi.io/api/v1/users?page=1&limit=10", "GET")
       setLoading(false);
       setData(result.data);
     } catch (error) {
